@@ -79,8 +79,14 @@ namespace Our.Umbraco.FriendlySitemap.Builders
 
         public override IEnumerable<IPublishedContent> GetContentItems(IPublishedContent node, string culture)
         {
+
             return base.GetContentItems(node, culture)
-                .Where(x => x.Value<bool>(_config.Fields.Exclude) == false);
+                .Where(x => x.Value<bool>(_config.Fields.Exclude) == false && !InExcludeDoctypeList(x.ContentType.Alias));
+        }
+
+        private bool InExcludeDoctypeList(string contentTypeAlias)
+        {
+            return _config.ExcludeList?.ToList().Contains(contentTypeAlias) ?? false;
         }
     }
 }
